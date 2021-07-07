@@ -6,7 +6,8 @@ pkgs.mkShell {
   name = "python${python.pythonVersion}-environment";
   strictDeps = true;
   nativeBuildInputs = [ pkgs.curl uvicorn pytest ];
-  buildInputs = [ aiosqlite databases fastapi sqlalchemy pytest-asyncio mock ];
+  /* buildInputs = [ aiosqlite databases fastapi sqlalchemy pytest-asyncio mock ]; */
+  buildInputs = [ aiosqlite databases sqlalchemy pytest-asyncio mock];
 
   shellHook = ''
     prefix=$PWD/inst
@@ -14,6 +15,25 @@ pkgs.mkShell {
     export PYTHONPATH=$prefix/lib/python${python.pythonVersion}/site-packages:$PYTHONPATH
 
     mkdir -p $prefix/lib/python${python.pythonVersion}/site-packages
-    python3 setup.py develop --prefix=$prefix --allow-hosts None --no-deps &> /dev/null
   '';
 }
+
+
+/* with import <nixpkgs> {};
+let
+  pythonEnv = python38.withPackages (ps: [
+    ps.numpy
+    ps.toolz
+    ps.virtualenv
+  ]);
+in mkShell {
+  packages = [
+    pythonEnv
+
+    black
+    mypy
+
+    libffi
+    openssl
+  ];
+} */
